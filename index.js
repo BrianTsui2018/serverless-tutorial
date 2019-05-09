@@ -76,4 +76,24 @@ app.post('/users', function (req, res) {
     });
 })
 
+// Delete User endpoint
+app.delete('/users/:userId', function (req, res) {
+    const params = {
+        TableName: USERS_TABLE,
+        Key: {
+            userId: req.params.userId,
+        },
+    }
+
+    dynamoDb.delete(params, (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(400).json({ error: 'Could not get user' });
+        }
+        console.log('\n-----------------------\n');
+        console.log(result);
+        res.status(204).send();
+    });
+})
+
 module.exports.handler = serverless(app);
