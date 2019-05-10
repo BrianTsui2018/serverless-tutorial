@@ -44,6 +44,10 @@ functions:
     handler: index.handler
     events:
       - http: 'POST /users'
+  deleteUser:
+    handler: index.handler
+    events:
+      - http: 'DELETE /users/{proxy+}'
 
 resources:
   Resources:
@@ -52,11 +56,11 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: userId
+            AttributeName: key
             AttributeType: S
         KeySchema:
           -
-            AttributeName: userId
+            AttributeName: key
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
