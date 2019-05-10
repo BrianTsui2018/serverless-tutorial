@@ -6,12 +6,12 @@ const express = require('express')
 const app = express()
 const AWS = require('aws-sdk');
 
-const USERS_TABLE = process.env.USERS_TABLE;
+const INGREDIENT_TABLE = process.env.INGREDIENT_TABLE;
 //const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const IS_OFFLINE = process.env.IS_OFFLINE;
 
-const debugLog = function (name, data) {
-    console.log('\n\n--------------------- Debug log : ' + name);
+const debugLog = function (str, data) {
+    console.log('\n\n--------------------- Debug log : ' + str);
     console.log(data);
     console.log('------------------------\n');
 }
@@ -22,7 +22,6 @@ if (IS_OFFLINE === 'true') {
         region: 'localhost',
         endpoint: 'http://localhost:8000'
     })
-    //console.log(dynamoDb);
 } else {
     dynamoDb = new AWS.DynamoDB.DocumentClient();
 };
@@ -33,10 +32,10 @@ app.get('/', function (req, res) {
     res.send('Hello World!')
 })
 
-// Get User endpoint
-app.get('/users/:key', function (req, res) {
+// Get ingredient endpoint
+app.get('/ingredient/:key', function (req, res) {
     const params = {
-        TableName: USERS_TABLE,
+        TableName: INGREDIENT_TABLE,
         Key: {
             key: req.params.key,
         },
@@ -46,24 +45,21 @@ app.get('/users/:key', function (req, res) {
         debugLog('result', result);
         if (error) {
             console.log(error);
-            res.status(400).json({ error: 'Could not get user' });
+            res.status(400).json({ error: 'Could not get ingredient' });
         }
         if (result.Item) {
-            // const { key, text, tags } = result.Item;
-            // res.json({ key, text, tags });
-            const { key, text } = result.Item;
-            res.json({ key, text });
+            const { key, text, tags } = result.Item;
+            res.json({ key, text, tags });
         } else {
-            res.status(404).json({ error: "User not found" });
+            res.status(404).json({ error: "ingredient not found" });
         }
     });
 })
 
-// Create User endpoint
-app.post('/users', function (req, res) {
+// Create ingredient endpoint
+app.post('/ingredient', function (req, res) {
 
-    //const { key, text, tags } = req.body;
-    const { key, text } = req.body;
+    const { key, text, tags } = req.body;
     if (typeof key !== 'string') {
         return res.status(400).json({ error: '"key" must be a string' });
     } else if (typeof text !== 'string') {
@@ -71,28 +67,28 @@ app.post('/users', function (req, res) {
     }
 
     const params = {
-        TableName: USERS_TABLE,
+        TableName: INGREDIENT_TABLE,
         Item: {
             key: key,
             text: text,
-            //tags: tags
+            tags: tags
         },
     };
 
     dynamoDb.put(params, (error) => {
         if (error) {
             console.log(error);
-            return res.status(400).json({ error: 'Could not create user' });
+            return res.status(400).json({ error: 'Could not create ingredient' });
         }
-        //res.json({ key, text, tags });
-        res.json({ key, text });
+        res.json({ key, text, tags });
+        return res.status(201).send();
     });
 })
 
-// Delete User endpoint
-app.delete('/users/:key', function (req, res) {
+// Delete ingredient endpoint
+app.delete('/ingredient/:key', function (req, res) {
     const params = {
-        TableName: USERS_TABLE,
+        TableName: INGREDIENT_TABLE,
         Key: {
             key: req.params.key,
         },
@@ -100,7 +96,7 @@ app.delete('/users/:key', function (req, res) {
     dynamoDb.delete(params, (error, result) => {
         if (error) {
             console.log(error);
-            res.status(400).json({ error: 'Could not get user' });
+            res.status(400).json({ error: 'Could not get ingredient' });
         }
         res.status(204).send();
     });
