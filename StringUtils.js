@@ -1,20 +1,20 @@
 // Set of utility functions to normalize and understand strings
-const latinMap = require('latinMap.json');
+const latinMap = require('./latinMap.json');
 
 // Function to remove diatrics and normalize the string to latin encoding.
-String.prototype.toLatin = function() {
-  return this.replace(/[^A-Za-z0-9\[\] ]/g, function(c) {
+String.prototype.toLatin = function () {
+  return this.replace(/[^A-Za-z0-9\[\] ]/g, function (c) {
     return latinMap[c] || c;
-    })
+  })
 };
 
 // Funtion that normalize trailing spaces.
 String.prototype.normalizeSpaces = function () {
-   return this.trim().replace(/\s\s+/g, ' ');
+  return this.trim().replace(/\s\s+/g, ' ');
 }
 
 // Funtion that remove quotes in a word.
-String.prototype.removeQotes = function() {
+String.prototype.removeQotes = function () {
   return this.replace(/["]+/g, '');
 };
 
@@ -38,12 +38,12 @@ function pluralVariations(text) {
     return out;
   }
   if (!text || text.length < 3) return out;
-  
+
   // Get the last 3 letters of the word.
   var c1 = text[text.length - 1];
   var c2 = text[text.length - 2];
   var c3 = text[text.length - 3];
-  
+
   // Try general rule.
   var str = text;
   if (c1 == 's') {
@@ -52,7 +52,7 @@ function pluralVariations(text) {
     str = text + "s";
   }
   out.push(str);
-  
+
   // Try special cases.
   if (c1 == 'y' && text.length > 4) {
     str = text.slice(0, text.length - 1) + "ies";
@@ -79,7 +79,7 @@ function pluralVariations(text) {
     str = text.slice(0, text.length - 2) + "es";
     out.push(str);
   }
-  
+
   // Super special cases.
   if (c1 == 's' && c2 == 'e') {
     str = text.slice(0, text.length - 2) + "is";
@@ -139,7 +139,7 @@ function pluralVariations(text) {
     str = "foot";
     out.push(str);
   }
-  
+
   return out;
 }
 
@@ -153,10 +153,10 @@ function endWordVariations(text) {
     return out;
   }
   if (!text || text.length < 3) return out;
-  
+
   var str = text + "e";
   out.push(str);
-  
+
   var c1 = text[text.length - 1];
   var c2 = text[text.length - 2];
   if (c1 == "e") {
