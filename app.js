@@ -86,19 +86,6 @@ class App extends React.Component {
     }
 }
 
-// class Simple extends React.Component {
-//     const json = {
-//         "Server Name": "foo",
-//         "Description": "bar",
-//         "Date": "Jan 1, 2018"
-//     }
-//     render() {
-//         return (
-//             <JsonTable json={json} />
-//         )
-//     }
-// }
-
 class List extends React.Component {
     constructor(props) {
         super(props);

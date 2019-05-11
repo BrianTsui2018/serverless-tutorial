@@ -9,8 +9,6 @@ const { debugLog } = require("./debugLog");
 const { parseJson } = require("./parseJson");         // test function
 const fs = require('fs');
 const stringUtils = require('./StringUtils.js');
-
-
 const INGREDIENT_TABLE = process.env.INGREDIENT_TABLE;
 //const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const IS_OFFLINE = process.env.IS_OFFLINE;
