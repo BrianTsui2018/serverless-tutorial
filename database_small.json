@@ -1,0 +1,32 @@
+{
+  "abelmosk": {
+    "text": "abelmosk",
+    "tags": {
+      "SPICE_HERB": 1
+    }
+  },
+  "absinthe wormwood": {
+    "text": "absinthe wormwood",
+    "tags": {
+      "SPICE_HERB": 1
+    }
+  },
+  "achiote": {
+    "text": "achiote",
+    "tags": {
+      "SPICE_HERB": 1
+    }
+  },
+  "ajwain": {
+    "text": "ajwain",
+    "tags": {
+      "SPICE_HERB": 1
+    }
+  },
+  "akudjura": {
+    "text": "akudjura",
+    "tags": {
+      "SPICE_HERB": 1
+    }
+  }
+}
