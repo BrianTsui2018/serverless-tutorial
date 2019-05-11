@@ -2,12 +2,15 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import 'bulma/bulma'
+import axios from 'axios'
+import { JsonTable } from 'react-json-to-html'
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            list: ["Go to the store", "Wash the dishes", "Learn some code"]
+            list: []
+            //list: ["Go to the store", "Wash the dishes", "Learn some code"]
         };
         this.addItem = this.addItem.bind(this);
         this.removeItem = this.removeItem.bind(this);
@@ -83,6 +86,19 @@ class App extends React.Component {
     }
 }
 
+// class Simple extends React.Component {
+//     const json = {
+//         "Server Name": "foo",
+//         "Description": "bar",
+//         "Date": "Jan 1, 2018"
+//     }
+//     render() {
+//         return (
+//             <JsonTable json={json} />
+//         )
+//     }
+// }
+
 class List extends React.Component {
     constructor(props) {
         super(props);
@@ -110,31 +126,52 @@ class List extends React.Component {
         // Variable to hold the filtered list before putting into state
         let newList = [];
 
+        // The found ingredient
+        let ingredient = {};
+
         // If the search bar isn't empty
         if (e.target.value !== "") {
             // Assign the original list to currentList
+            console.log('\n---- test zone ----\n');
             currentList = this.props.items;
+            console.log('e.target.value = ' + e.target.value);
+            console.log('\n');
+            axios.get('http://localhost:3000/fuzzy-search/' + e.target.value).then(res => {
+                console.log(res);
+                ingredient = res.data;
+                //if (res.status === 200) {
+                currentList = [{ ingredient: ingredient.text, Tags: ingredient.tags }];
+                newList = currentList;
+                console.log(newList);
+                // Set the filtered state based on what our rules added to newList
+                this.setState({
+                    filtered: newList
+                });
+                //}
+            })
 
             // Use .filter() to determine which items should be displayed
             // based on the search terms
-            newList = currentList.filter(item => {
-                // change current item to lowercase
-                const lc = item.toLowerCase();
-                // change search term to lowercase
-                const filter = e.target.value.toLowerCase();
-                // check to see if the current list item includes the search term
-                // If it does, it will be added to newList. Using lowercase eliminates
-                // issues with capitalization in search terms and search content
-                return lc.includes(filter);
-            });
+            // newList = currentList.filter(item => {
+            //     // change current item to lowercase
+            //     const lc = item.toLowerCase();
+            //     // change search term to lowercase
+            //     const filter = e.target.value.toLowerCase();
+            //     // check to see if the current list item includes the search term
+            //     // If it does, it will be added to newList. Using lowercase eliminates
+            //     // issues with capitalization in search terms and search content
+            //     return lc.includes(filter);
+            // });
+            // newList = currentList;
+
         } else {
             // If the search bar is empty, set newList to original task list
-            newList = this.props.items;
+            //newList = this.props.items;
         }
-        // Set the filtered state based on what our rules added to newList
-        this.setState({
-            filtered: newList
-        });
+        // // Set the filtered state based on what our rules added to newList
+        // this.setState({
+        //     filtered: newList
+        // });
     }
 
     render() {
@@ -144,8 +181,8 @@ class List extends React.Component {
                 <ul>
                     {this.state.filtered.map(item => (
                         <li key={item}>
-                            {item} &nbsp;
-                                  {/* <span
+                            <JsonTable json={item} />
+                            {/* <span
                                 className="delete"
                                 onClick={() => this.props.delete(item)}
                             /> */}
